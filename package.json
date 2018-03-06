@@ -1,0 +1,28 @@
+{
+  "name": "controllable-webcams-live",
+  "version": "1.0.0",
+  "description": "control a webcam via youtube chat",
+  "main": "bot.js",
+  "dependencies": {
+    "youtube-live-chat": "qwazwsx/youtube-live-chat",
+	"request": "^2.83.0",
+	"event-chains": "^0.0.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "youtube",
+    "live",
+    "livestreaming",
+    "ControllableWebcams",
+    "reddit",
+    "webcam",
+    "camera",
+    "security",
+    "camera"
+  ],
+  "author": "qwazwsx (/u/thisisatesttoseehowl)",
+  "license": "GPL-3.0"
+}
