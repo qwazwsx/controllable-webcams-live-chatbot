@@ -24,7 +24,9 @@ eg: `node bot.js Zs_P316OXxm XXXXXXXXXXXXXXXXXXXXXXXXXXXXX 123.456.789`
 * api key must have access to Youtube Data v3 (see quota usage)
 * url must not contain "http(s)://"
 * url *can* contain a port
-* debug enables extra logging, should be either true or not set. 
+* having debug not set disables all debugging
+* setting debug to 1 enables debug output in the console
+* setting debug to 2 enables both debug output in the console and to debug.log
 
 ## api quota usage
 this will make around 1 request per second. this can be changed by changing the var `chatRefreshTimeout` located at the top of the file
