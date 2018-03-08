@@ -4,9 +4,10 @@
   "description": "control a webcam via youtube chat",
   "main": "bot.js",
   "dependencies": {
-    "youtube-live-chat": "qwazwsx/youtube-live-chat",
-	"request": "^2.83.0",
-	"event-chains": "^0.0.8"
+    "event-chains": "^0.0.8",
+    "fs": "0.0.1-security",
+    "request": "^2.83.0",
+    "youtube-live-chat": "qwazwsx/youtube-live-chat"
   },
   "devDependencies": {},
   "scripts": {
