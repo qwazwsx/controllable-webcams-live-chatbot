@@ -77,8 +77,9 @@ ytClient.on('chat', data => {
 			console.log(commandMultiplier)
 			console.log(commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')])
 			
-			commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')].push(data.snippet.displayMessage.toLowerCase().replace(/\D/g,''))
-			
+			if (commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')] !== ''){
+				commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')].push(data.snippet.displayMessage.toLowerCase().replace(/\D/g,''))
+			}commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')]
 		}
 		
 		
@@ -109,16 +110,18 @@ ytClient.on('chatRefreshed', a => {
 		debug(command)
 		multiplier = 0;
 		
+		console.log('[ASD]')
+		console.log(commandMultiplier.r)
 		
 		//calculate average of multiplier
-		if (commandMultiplier[commands[command]] !== undefined){
+		if (commandMultiplier[commands[command]] !== []){
 			multiplier = (commandMultiplier[commands[command]].reduce(add,0))/commandMultiplier[commands[command]].length
 		}
 		
 		
 		//send API commands
 		//if a multiplier exists and the command itsnt home
-		if (multiplier !== 0 || command !== 6){
+		if (multiplier !== 0 && command !== 6){
 			API(commandArgs[command],commandValues[command]*multiplier)
 		}else{
 			//if no multiplier or home command
@@ -149,7 +152,7 @@ function API(api,value,callback){
 		debug('error:', error); // Print the error if one occurred
 		debug('statusCode:', response && response.statusCode); // Print the response status code if a response was received
 		debug('body:', body); 
-		debug('[INFO] camera PTZ '+commands[command]+' - '+commandValues[command])
+		debug('[INFO] camera PTZ '+api+' - '+value)
 		//eval()'s scare me
 		//if you say it outloud it sounds like 'evil'
 		//https://www.youtube.com/watch?v=urb6WPtoKIk
