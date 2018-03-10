@@ -48,7 +48,8 @@ const fs = require('fs');
 
 
 
-var chats = ['']
+var chats = [''];
+var commandMultiplier = [];
 var firstTime = true;
 //debug mode
 //turn this off
@@ -64,52 +65,68 @@ ytClient.on('chat', data => {
 	//add new chat to an array
 	if (!firstTime){
 		debug('[DEBUG] new message: ' + data.snippet.displayMessage)
-		chats.push(data.snippet.displayMessage.toLowerCase())
+		//push cleaned up message to an array
+		chats.push(data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ',''))
+		
+		if (data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','') == 'l' || data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','') == 'r' || data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','') == 'u' || data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','') == 'd' || data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','') == '+' || data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','') == '-'){
+			
+			if (commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')] == undefined){
+				commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')] = []
+			}
+			
+			console.log(commandMultiplier)
+			console.log(commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')])
+			
+			commandMultiplier[data.snippet.displayMessage.toLowerCase().replace(/[0-9]/g, '').replace(' ','')].push(data.snippet.displayMessage.toLowerCase().replace(/\D/g,''))
+			
+		}
+		
+		
 	}
 })
 
-
+//L,R,U,D,+,-
+//list of text commands
+var commands = ['l','r','u','d','+','-','h'];
+//list of args for API calls
+var commandArgs = ['rpan','rpan','rtilt','rtilt','zoom','zoom','zoom=1&center']
+//list of command values for API requests
+var commandValues = ['-10','10','10','-10','500','-500','0,0']
+var multiplier = 0;
+var command;
+		
 ytClient.on('chatRefreshed', a => {
 	firstTime = false;	
 	debug('[DEBUG] array "chats" = ' + chats.toString())
+	
 	//put the amount of times the commands were sent in an array
-	var commandTimes = [countInArray(chats,'l'),countInArray(chats,'r'),countInArray(chats,'u'),countInArray(chats,'d'),countInArray(chats,'+'),countInArray(chats,'-')]
+	var commandTimes = [countInArray(chats,'l'),countInArray(chats,'r'),countInArray(chats,'u'),countInArray(chats,'d'),countInArray(chats,'+'),countInArray(chats,'-'),countInArray(chats,'h')]
 	
 	//if a command was sent
-	if (commandTimes[0]+commandTimes[1]+commandTimes[2]+commandTimes[3]+commandTimes[4]+commandTimes[5] !== 0){
-		//return the command as a number 0-3 (corrisponds to commandTimes)
+	if (commandTimes[0]+commandTimes[1]+commandTimes[2]+commandTimes[3]+commandTimes[4]+commandTimes[5]+commandTimes[6] !== 0){
+		//return the command as a number 0-6 (corrisponds to commandTimes)
 		var command = commandTimes.indexOf(Math.max(...commandTimes))
 		debug(command)
-		//L,R,U,D,+,-
-		var commandList = ['-10','10','10','-10','500','-500']
+		multiplier = 0;
 		
-		if (command <= 1){
-			//pan
-			request('http://'+process.argv[4]+'/axis-cgi/com/ptz.cgi?rpan='+commandList[command], function (error, response, body) {
-				debug('error:', error); // Print the error if one occurred
-				debug('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-				debug('body:', body); 
-				debug('[INFO] panned camera '+commandList[command])
-			});
-		}else{
-			if (command <= 3){
-				//tilt
-				request('http://'+process.argv[4]+'/axis-cgi/com/ptz.cgi?rtilt='+commandList[command], function (error, response, body) {
-					debug('error:', error); // Print the error if one occurred
-					debug('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-					debug('body:', body); 
-					debug('[INFO] tilted camera '+commandList[command])
-				});
-			}
-			request('http://'+process.argv[4]+'/axis-cgi/com/ptz.cgi?rzoom='+commandList[command], function (error, response, body) {
-				debug('error:', error); // Print the error if one occurred
-				debug('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-				debug('body:', body); 
-				debug('[INFO] zoomed camera '+commandList[command])
-			});
+		
+		//calculate average of multiplier
+		if (commandMultiplier[commands[command]] !== undefined){
+			multiplier = (commandMultiplier[commands[command]].reduce(add,0))/commandMultiplier[commands[command]].length
 		}
 		
-		//http://129.79.35.247/axis-cgi/com/ptz.cgi?rzoom=200
+		
+		//send API commands
+		//if a multiplier exists and the command itsnt home
+		if (multiplier !== 0 || command !== 6){
+			API(commandArgs[command],commandValues[command]*multiplier)
+		}else{
+			//if no multiplier or home command
+			API(commandArgs[command],commandValues[command])
+		}
+		
+		
+		
 		
 		debug('[DEBUG] command is ' + command)
 	}else{
@@ -118,9 +135,27 @@ ytClient.on('chatRefreshed', a => {
 	}
 	//clear list
 	chats = []
+	commandMultiplier = []
 	
 })
 
+
+function API(api,value,callback){
+	//api is the argument (eg: rzoom, center, rtilt)
+	//value is the value to set the api arg to
+	//callback is an optional callback (i feel weird just eval()-ing it)
+	
+	request('http://'+process.argv[4]+'/axis-cgi/com/ptz.cgi?'+api+'='+value, function (error, response, body) {
+		debug('error:', error); // Print the error if one occurred
+		debug('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+		debug('body:', body); 
+		debug('[INFO] camera PTZ '+commands[command]+' - '+commandValues[command])
+		//eval()'s scare me
+		//if you say it outloud it sounds like 'evil'
+		//https://www.youtube.com/watch?v=urb6WPtoKIk
+		if (callback !== undefined){eval(callback);}
+	});
+}
 
 
 
@@ -170,5 +205,11 @@ function debug(a){
 	}
 	
 }
+
+//helper func for reduce
+function add(a, b) {
+    return a + b;
+}
+
 
 debug('[DEBUG] debug level is ' + process.argv[5]);
