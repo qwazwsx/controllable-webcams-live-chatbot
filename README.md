@@ -12,6 +12,16 @@ it listens to a youtube livestream chat and moves a PTZ webcam based on chat
 * D=down
 * +=zoom in
 * -=zoom out
+* h=home
+
+you can specify a multiplier to commands
+do this by adding a number after the chat command
+eg:
+"r 2" moves twice the distance that "r" does
+"+5" moves 5 times the distance that "+" does
+
+note: if the multiplier is too large the camera will return an error ([specific limits here  on p20](https://www.axis.com/files/manuals/vapix_ptz_52933_en_1307.pdf))
+
 
 ## terminal arg breakdown
  `node bot.js <youtube video id> <api key> <url> <debug>`
