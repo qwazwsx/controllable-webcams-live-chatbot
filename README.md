@@ -3,7 +3,7 @@ made by qwazwsx (/u/thisisatesttoseehowl)
 
 ## What is this
 
-it listens to a youtube livestream chat and moves a PTZ webcam based on chat
+it listens to a youtube livestream chat and moves an AXIS PTZ webcam based on chat
 
 ## chat commands
 * L=left
