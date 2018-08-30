@@ -46,7 +46,3 @@ this will make around 1 request per second. this can be changed by changing the 
 * something doesnt work?
 
 submit an issue on my github
-
-* have questions? 
-
-contact me on discord qwazwsx#6805 or on reddit /u/thisisatesttoseehowl
