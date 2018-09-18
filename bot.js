@@ -34,8 +34,6 @@ var chatRefreshTimeout = 1000;
 // something doesnt work?
 // submit an issue on my github
 //
-// have questions? 
-// contact me on discord qwazwsx#6805 or on reddit /u/thisisatesttoseehowl
 //============================================
 
 console.log('[INFO] running on youtube.com/watch?v='+process.argv[2]+', controlling '+process.argv[4])
