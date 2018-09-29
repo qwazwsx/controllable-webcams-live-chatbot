@@ -1,5 +1,4 @@
 # controllable-webcams-live
-made by qwazwsx (/u/thisisatesttoseehowl)
 
 ## What is this
 
