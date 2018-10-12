@@ -1,5 +1,10 @@
 # controllable-webcams-live
 
+https://streamable.com/853zg
+
+here is a video of an early prototype in action
+
+
 ## What is this
 
 it listens to a youtube livestream chat and moves an AXIS PTZ webcam based on chat
