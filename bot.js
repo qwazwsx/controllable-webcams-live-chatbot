@@ -1,5 +1,5 @@
 //======================ControllableWebcamsLive======================
-// made by qwazwsx (/u/thisisatesttoseehowl)
+// made by qwazwsx
 // licenced under https://www.gnu.org/licenses/gpl-3.0.en.html
 //
 //======================What is this?======================
